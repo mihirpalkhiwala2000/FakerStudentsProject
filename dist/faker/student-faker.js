@@ -47,7 +47,7 @@ var createRandomStudents = function () { return __awaiter(void 0, void 0, void 0
             case 0: return [4 /*yield*/, teacher_schema_1.default.find({}, "_id")
                     .exec()
                     .then(function (data) {
-                    return data.map(function (teacher) { return teacher._id.toString(); });
+                    return data.map(function (teacher) { return teacher._id; });
                 })];
             case 1:
                 teacherList = _a.sent();

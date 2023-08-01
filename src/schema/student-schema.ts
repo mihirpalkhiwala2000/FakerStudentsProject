@@ -12,7 +12,7 @@ export interface StudentSchemaType {
   gender: string;
   marks: number;
   location: Addresstype;
-  teacherId?: string;
+  teacherId?: ObjectId;
 }
 const studentSchema = new Schema<StudentSchemaType>({
   name: {
@@ -50,7 +50,7 @@ const studentSchema = new Schema<StudentSchemaType>({
     },
   },
   teacherId: {
-    type: String,
+    type: Schema.Types.ObjectId,
   },
 });
 studentSchema.index({ location: "2dsphere" });

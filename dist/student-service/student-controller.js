@@ -90,4 +90,24 @@ StudentRouter.patch("/update", function (req, res) { return __awaiter(void 0, vo
         }
     });
 }); });
+StudentRouter.get("/:id", function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
+    var id, _a, _b, e_3;
+    return __generator(this, function (_c) {
+        switch (_c.label) {
+            case 0:
+                _c.trys.push([0, 2, , 3]);
+                id = req.params.id;
+                _b = (_a = res).send;
+                return [4 /*yield*/, (0, student_service_1.studentById)(id)];
+            case 1:
+                _b.apply(_a, [_c.sent()]);
+                return [3 /*break*/, 3];
+            case 2:
+                e_3 = _c.sent();
+                res.send(e_3.message);
+                return [3 /*break*/, 3];
+            case 3: return [2 /*return*/];
+        }
+    });
+}); });
 //# sourceMappingURL=student-controller.js.map

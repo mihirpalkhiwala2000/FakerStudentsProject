@@ -1,5 +1,9 @@
 import * as express from "express";
-import { storeStudentsDetails, updateStudentDetails } from "./student-service";
+import {
+  storeStudentsDetails,
+  studentById,
+  updateStudentDetails,
+} from "./student-service";
 import { errorMsg, successMsgs } from "../constants/constants";
 import { createRandomStudents } from "../faker/student-faker";
 const StudentRouter = express.Router();
@@ -32,6 +36,15 @@ StudentRouter.patch("/update", async (req, res) => {
       "🚀 ~ file: controller.ts:26 ~ StudentRouter.patch ~ e:",
       e.message
     );
+    res.send(e.message);
+  }
+});
+
+StudentRouter.get("/:id", async (req, res) => {
+  try {
+    const id = req.params.id;
+    res.send(await studentById(id));
+  } catch (e: any) {
     res.send(e.message);
   }
 });

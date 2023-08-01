@@ -7,7 +7,7 @@ export const createRandomStudents = async (): Promise<StudentSchemaType[]> => {
   const teacherList = await Teacher.find({}, "_id")
     .exec()
     .then((data) => {
-      return data.map((teacher) => teacher._id.toString());
+      return data.map((teacher) => teacher._id);
     });
   if (!teacherList.length) {
     throw Error(errorMsg.teachersNotCreated);

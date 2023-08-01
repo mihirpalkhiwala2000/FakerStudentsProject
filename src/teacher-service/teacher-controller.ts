@@ -6,6 +6,7 @@ import {
 } from "./teacher-service";
 import { TEACHERS } from "../faker/teacher-faker";
 import { successMsgs } from "../constants/constants";
+import { ObjectId } from "mongoose";
 
 const TeacherRouter = express.Router();
 export default TeacherRouter;
@@ -52,7 +53,7 @@ TeacherRouter.get("/totalCount", async (req, res) => {
 
 TeacherRouter.post("/nearestStudents/:id", async (req, res) => {
   try {
-    const id: string = req.params.id;
+    const id = req.params.id;
     const { distanceToStudent, name } = await nearStudents(id);
     res.send({
       message: `Distance from ${name} of student`,

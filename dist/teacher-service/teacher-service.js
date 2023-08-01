@@ -92,7 +92,7 @@ var totalStudentCount = function () { return __awaiter(void 0, void 0, void 0, f
 }); };
 exports.totalStudentCount = totalStudentCount;
 var nearStudents = function (id) { return __awaiter(void 0, void 0, void 0, function () {
-    var teacherDetails, location, name, unitValue, distanceToStudent;
+    var teacherDetails, location, name, _id, unitValue, distanceToStudent;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0: return [4 /*yield*/, teacher_schema_1.default.findById(id)];
@@ -101,7 +101,7 @@ var nearStudents = function (id) { return __awaiter(void 0, void 0, void 0, func
                 if (!teacherDetails) {
                     throw Error(constants_1.errorMsg.noTeacher);
                 }
-                location = teacherDetails.location, name = teacherDetails.name;
+                location = teacherDetails.location, name = teacherDetails.name, _id = teacherDetails._id;
                 unitValue = 1000;
                 return [4 /*yield*/, student_schema_1.default.aggregate([
                         {
@@ -110,7 +110,7 @@ var nearStudents = function (id) { return __awaiter(void 0, void 0, void 0, func
                                     type: "Point",
                                     coordinates: location.coordinates,
                                 },
-                                query: { teacherId: id },
+                                query: { teacherId: _id },
                                 distanceField: "distanceToStudent",
                                 distanceMultiplier: 1 / unitValue,
                             },

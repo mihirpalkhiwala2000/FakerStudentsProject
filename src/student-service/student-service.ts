@@ -1,6 +1,5 @@
 import { errorMsg } from "../constants/constants";
 import Student, { StudentSchemaType } from "../schema/student-schema";
-import Teacher from "../schema/teacher-schema";
 
 export const storeStudentsDetails = (data: StudentSchemaType[]) => {
   return Student.create(data);
@@ -22,3 +21,5 @@ export const updateStudentDetails = async (data: any) => {
   delete data.email;
   return Student.findOneAndUpdate({ email, name }, data, { new: true });
 };
+
+export const studentById = async (id: string) => await Student.findById(id);

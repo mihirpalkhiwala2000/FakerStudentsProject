@@ -36,7 +36,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.updateStudentDetails = exports.storeStudentsDetails = void 0;
+exports.studentById = exports.updateStudentDetails = exports.storeStudentsDetails = void 0;
 var constants_1 = require("../constants/constants");
 var student_schema_1 = require("../schema/student-schema");
 var storeStudentsDetails = function (data) {
@@ -61,4 +61,11 @@ var updateStudentDetails = function (data) { return __awaiter(void 0, void 0, vo
     });
 }); };
 exports.updateStudentDetails = updateStudentDetails;
+var studentById = function (id) { return __awaiter(void 0, void 0, void 0, function () { return __generator(this, function (_a) {
+    switch (_a.label) {
+        case 0: return [4 /*yield*/, student_schema_1.default.findById(id)];
+        case 1: return [2 /*return*/, _a.sent()];
+    }
+}); }); };
+exports.studentById = studentById;
 //# sourceMappingURL=student-service.js.map

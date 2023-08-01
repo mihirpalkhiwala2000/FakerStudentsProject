@@ -39,7 +39,7 @@ var studentSchema = new mongoose_1.Schema({
         },
     },
     teacherId: {
-        type: String,
+        type: mongoose_1.Schema.Types.ObjectId,
     },
 });
 studentSchema.index({ location: "2dsphere" });

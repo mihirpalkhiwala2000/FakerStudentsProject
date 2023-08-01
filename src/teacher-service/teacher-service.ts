@@ -1,5 +1,4 @@
-import { ObjectId } from "mongoose";
-import Student, { StudentSchemaType } from "../schema/student-schema";
+import Student from "../schema/student-schema";
 import Teacher, { TeacherSchemaType } from "../schema/teacher-schema";
 import { errorMsg } from "../constants/constants";
 
@@ -57,7 +56,7 @@ export const nearStudents = async (id: string) => {
   if (!teacherDetails) {
     throw Error(errorMsg.noTeacher);
   }
-  const { location, name } = teacherDetails;
+  const { location, name, _id } = teacherDetails;
 
   const unitValue = 1000;
 
@@ -68,7 +67,7 @@ export const nearStudents = async (id: string) => {
           type: "Point",
           coordinates: location.coordinates,
         },
-        query: { teacherId: id },
+        query: { teacherId: _id },
         distanceField: "distanceToStudent",
         distanceMultiplier: 1 / unitValue,
       },
