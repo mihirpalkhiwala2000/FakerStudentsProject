@@ -10,8 +10,7 @@ export interface TeacherSchemaType {
   name: string;
   email: string;
   location: Addresstype;
-  totalStudentCount?: number;
-  distanceToStudent?: number;
+  _id?: Schema.Types.ObjectId;
 }
 const teacherSchema = new Schema<TeacherSchemaType>({
   name: {
@@ -35,12 +34,6 @@ const teacherSchema = new Schema<TeacherSchemaType>({
     coordinates: {
       type: [Number, Number],
     },
-  },
-  distanceToStudent: {
-    type: Number,
-  },
-  totalStudentCount: {
-    type: Number,
   },
 });
 

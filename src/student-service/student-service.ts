@@ -1,5 +1,6 @@
 import { errorMsg } from "../constants/constants";
 import Student, { StudentSchemaType } from "../schema/student-schema";
+import Teacher from "../schema/teacher-schema";
 
 export const storeStudentsDetails = (data: StudentSchemaType[]) => {
   return Student.create(data);

@@ -26,12 +26,6 @@ var teacherSchema = new mongoose_1.Schema({
             type: [Number, Number],
         },
     },
-    distanceToStudent: {
-        type: Number,
-    },
-    totalStudentCount: {
-        type: Number,
-    },
 });
 teacherSchema.index({ location: "2dsphere" });
 var Teacher = (0, mongoose_1.model)("Teacher", teacherSchema);

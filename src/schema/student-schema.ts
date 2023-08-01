@@ -4,6 +4,7 @@ import { errorMsg } from "../constants/constants";
 import { Addresstype } from "./teacher-schema";
 
 export interface StudentSchemaType {
+  _id?: Schema.Types.ObjectId;
   name: string;
   email: string;
   birthdate: Date;
@@ -11,8 +12,7 @@ export interface StudentSchemaType {
   gender: string;
   marks: number;
   location: Addresstype;
-  teacherId?: ObjectId;
-  distanceFromNearestTeacher?: number;
+  teacherId?: string;
 }
 const studentSchema = new Schema<StudentSchemaType>({
   name: {
@@ -46,14 +46,11 @@ const studentSchema = new Schema<StudentSchemaType>({
       enum: ["Point"],
     },
     coordinates: {
-      type: [Number],
+      type: [Number, Number],
     },
   },
   teacherId: {
-    type: Schema.Types.ObjectId,
-  },
-  distanceFromNearestTeacher: {
-    type: Number,
+    type: String,
   },
 });
 studentSchema.index({ location: "2dsphere" });

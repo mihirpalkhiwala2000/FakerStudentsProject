@@ -62,28 +62,19 @@ TeacherRouter.post("", function (req, res) { return __awaiter(void 0, void 0, vo
         }
     });
 }); });
-TeacherRouter.get("", function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var _a, _b, e_2;
-    return __generator(this, function (_c) {
-        switch (_c.label) {
-            case 0:
-                _c.trys.push([0, 2, , 3]);
-                _b = (_a = res).send;
-                return [4 /*yield*/, (0, teacher_service_1.near)()];
-            case 1:
-                _b.apply(_a, [_c.sent()]);
-                return [3 /*break*/, 3];
-            case 2:
-                e_2 = _c.sent();
-                console.log("🚀 ~ file: teacher-controller.ts:14 ~ TeacherRouter.post ~ e:", e_2);
-                res.send(e_2.message);
-                return [3 /*break*/, 3];
-            case 3: return [2 /*return*/];
-        }
-    });
-}); });
+// TeacherRouter.get("", async (req, res) => {
+//   try {
+//     res.send(await nearestTeacherToStudent());
+//   } catch (e: any) {
+//     console.log(
+//       "🚀 ~ file: teacher-controller.ts:14 ~ TeacherRouter.post ~ e:",
+//       e
+//     );
+//     res.send(e.message);
+//   }
+// });
 TeacherRouter.get("/totalCount", function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var temp, e_3;
+    var temp, e_2;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
@@ -95,8 +86,31 @@ TeacherRouter.get("/totalCount", function (req, res) { return __awaiter(void 0, 
                 res.send(temp);
                 return [3 /*break*/, 3];
             case 2:
-                e_3 = _a.sent();
-                throw Error(e_3.message);
+                e_2 = _a.sent();
+                throw Error(e_2.message);
+            case 3: return [2 /*return*/];
+        }
+    });
+}); });
+TeacherRouter.post("/nearestStudents/:id", function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
+    var id, _a, distanceToStudent, name_1, e_3;
+    return __generator(this, function (_b) {
+        switch (_b.label) {
+            case 0:
+                _b.trys.push([0, 2, , 3]);
+                id = req.params.id;
+                return [4 /*yield*/, (0, teacher_service_1.nearStudents)(id)];
+            case 1:
+                _a = _b.sent(), distanceToStudent = _a.distanceToStudent, name_1 = _a.name;
+                res.send({
+                    message: "Distance from ".concat(name_1, " of student"),
+                    distanceToStudent: distanceToStudent,
+                });
+                return [3 /*break*/, 3];
+            case 2:
+                e_3 = _b.sent();
+                res.send(e_3.message);
+                return [3 /*break*/, 3];
             case 3: return [2 /*return*/];
         }
     });

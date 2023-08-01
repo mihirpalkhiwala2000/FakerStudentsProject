@@ -1,13 +1,14 @@
 import * as express from "express";
 import { storeStudentsDetails, updateStudentDetails } from "./student-service";
-import { STUDENTS } from "../faker/student-faker";
 import { errorMsg, successMsgs } from "../constants/constants";
+import { createRandomStudents } from "../faker/student-faker";
 const StudentRouter = express.Router();
 export default StudentRouter;
 
 StudentRouter.post("", async (req, res) => {
   try {
-    await storeStudentsDetails(STUDENTS);
+    const studentsData = await createRandomStudents();
+    await storeStudentsDetails(studentsData);
     res.send(successMsgs.created);
   } catch (e: any) {
     console.log(

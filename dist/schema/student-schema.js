@@ -35,14 +35,11 @@ var studentSchema = new mongoose_1.Schema({
             enum: ["Point"],
         },
         coordinates: {
-            type: [Number],
+            type: [Number, Number],
         },
     },
     teacherId: {
-        type: mongoose_1.Schema.Types.ObjectId,
-    },
-    distanceFromNearestTeacher: {
-        type: Number,
+        type: String,
     },
 });
 studentSchema.index({ location: "2dsphere" });

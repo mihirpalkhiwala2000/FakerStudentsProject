@@ -1,12 +1,11 @@
 import * as express from "express";
 import {
-  near,
+  nearStudents,
   storeTeacherDetails,
   totalStudentCount,
 } from "./teacher-service";
 import { TEACHERS } from "../faker/teacher-faker";
 import { successMsgs } from "../constants/constants";
-import Teacher from "../schema/teacher-schema";
 
 const TeacherRouter = express.Router();
 export default TeacherRouter;
@@ -25,18 +24,18 @@ TeacherRouter.post("", async (req, res) => {
   }
 });
 
-TeacherRouter.get("", async (req, res) => {
-  try {
-    res.send(await near());
-  } catch (e: any) {
-    console.log(
-      "🚀 ~ file: teacher-controller.ts:14 ~ TeacherRouter.post ~ e:",
-      e
-    );
+// TeacherRouter.get("", async (req, res) => {
+//   try {
+//     res.send(await nearestTeacherToStudent());
+//   } catch (e: any) {
+//     console.log(
+//       "🚀 ~ file: teacher-controller.ts:14 ~ TeacherRouter.post ~ e:",
+//       e
+//     );
 
-    res.send(e.message);
-  }
-});
+//     res.send(e.message);
+//   }
+// });
 
 TeacherRouter.get("/totalCount", async (req, res) => {
   try {
@@ -48,5 +47,18 @@ TeacherRouter.get("/totalCount", async (req, res) => {
     res.send(temp);
   } catch (e: any) {
     throw Error(e.message);
+  }
+});
+
+TeacherRouter.post("/nearestStudents/:id", async (req, res) => {
+  try {
+    const id: string = req.params.id;
+    const { distanceToStudent, name } = await nearStudents(id);
+    res.send({
+      message: `Distance from ${name} of student`,
+      distanceToStudent,
+    });
+  } catch (e: any) {
+    res.send(e.message);
   }
 });

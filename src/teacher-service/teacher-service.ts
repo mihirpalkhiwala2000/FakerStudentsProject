@@ -1,56 +1,43 @@
-import { ObjectId, Schema } from "mongoose";
+import { ObjectId } from "mongoose";
 import Student, { StudentSchemaType } from "../schema/student-schema";
 import Teacher, { TeacherSchemaType } from "../schema/teacher-schema";
-import { successMsgs } from "../constants/constants";
-
-interface TeacherSchemaTypeWithId extends TeacherSchemaType {
-  _id: string;
-}
+import { errorMsg } from "../constants/constants";
 
 export const storeTeacherDetails = (data: TeacherSchemaType[]) => {
   return Teacher.create(data);
 };
 
-export const near = async () => {
-  const student = await Student.find({});
-  student.map(
-    async ({ location, email, teacherId, name }: StudentSchemaType) => {
-      const unitValue = 1000;
+// export const nearestTeacherToStudent = async () => {
+//   const student = await Student.find({});
+//   const nearestTeacher = student.map(
+//     async ({ location }: StudentSchemaType) => {
+//       const unitValue = 1000;
 
-      const [nearestTeacher]: Array<TeacherSchemaType & { _id: ObjectId }> =
-        await Teacher.aggregate([
-          {
-            $geoNear: {
-              near: {
-                type: "Point",
-                coordinates: location.coordinates,
-              },
-              distanceField: "distanceToStudent",
-              distanceMultiplier: 1 / unitValue,
-            },
-          },
-          {
-            $sort: {
-              distance: 1,
-            },
-          },
-          { $limit: 1 },
-        ]);
-      if (teacherId && teacherId.toString() === nearestTeacher._id.toString()) {
-      } else {
-        await Student.findOneAndUpdate(
-          { email, name },
-          {
-            teacherId: nearestTeacher._id,
-            distanceFromNearestTeacher: nearestTeacher.distanceToStudent,
-          },
-          { new: true }
-        );
-      }
-    }
-  );
-  return successMsgs.created;
-};
+//       const [temp] = await Teacher.aggregate([
+//         {
+//           $geoNear: {
+//             near: {
+//               type: "Point",
+//               coordinates: location.coordinates,
+//             },
+//             distanceField: "distanceToTeacher",
+//             distanceMultiplier: 1 / unitValue,
+//           },
+//         },
+//         {
+//           $sort: {
+//             distance: 1,
+//           },
+//         },
+//         { $limit: 1 },
+//       ]);
+
+//       return temp.distanceToTeacher;
+//     }
+//   );
+
+//   return await nearestTeacher;
+// };
 
 export const totalStudentCount = async () => {
   const studentCount = await Student.aggregate([
@@ -62,4 +49,37 @@ export const totalStudentCount = async () => {
     },
   ]);
   return studentCount;
+};
+
+export const nearStudents = async (id: string) => {
+  const teacherDetails = await Teacher.findById(id);
+
+  if (!teacherDetails) {
+    throw Error(errorMsg.noTeacher);
+  }
+  const { location, name } = teacherDetails;
+
+  const unitValue = 1000;
+
+  const distanceToStudent = await Student.aggregate([
+    {
+      $geoNear: {
+        near: {
+          type: "Point",
+          coordinates: location.coordinates,
+        },
+        query: { teacherId: id },
+        distanceField: "distanceToStudent",
+        distanceMultiplier: 1 / unitValue,
+      },
+    },
+    {
+      $sort: {
+        distance: 1,
+      },
+    },
+    { $project: { name: 1, email: 1, distanceToStudent: 1 } },
+  ]);
+
+  return { distanceToStudent, name };
 };

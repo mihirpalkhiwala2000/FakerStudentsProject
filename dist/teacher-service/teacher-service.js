@@ -36,7 +36,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.totalStudentCount = exports.near = exports.storeTeacherDetails = void 0;
+exports.nearStudents = exports.totalStudentCount = exports.storeTeacherDetails = void 0;
 var student_schema_1 = require("../schema/student-schema");
 var teacher_schema_1 = require("../schema/teacher-schema");
 var constants_1 = require("../constants/constants");
@@ -44,60 +44,34 @@ var storeTeacherDetails = function (data) {
     return teacher_schema_1.default.create(data);
 };
 exports.storeTeacherDetails = storeTeacherDetails;
-var near = function () { return __awaiter(void 0, void 0, void 0, function () {
-    var student;
-    return __generator(this, function (_a) {
-        switch (_a.label) {
-            case 0: return [4 /*yield*/, student_schema_1.default.find({})];
-            case 1:
-                student = _a.sent();
-                student.map(function (_a) {
-                    var location = _a.location, email = _a.email, teacherId = _a.teacherId, name = _a.name;
-                    return __awaiter(void 0, void 0, void 0, function () {
-                        var unitValue, nearestTeacher;
-                        return __generator(this, function (_b) {
-                            switch (_b.label) {
-                                case 0:
-                                    unitValue = 1000;
-                                    return [4 /*yield*/, teacher_schema_1.default.aggregate([
-                                            {
-                                                $geoNear: {
-                                                    near: {
-                                                        type: "Point",
-                                                        coordinates: location.coordinates,
-                                                    },
-                                                    distanceField: "distanceToStudent",
-                                                    distanceMultiplier: 1 / unitValue,
-                                                },
-                                            },
-                                            {
-                                                $sort: {
-                                                    distance: 1,
-                                                },
-                                            },
-                                            { $limit: 1 },
-                                        ])];
-                                case 1:
-                                    nearestTeacher = (_b.sent())[0];
-                                    if (!(teacherId && teacherId.toString() === nearestTeacher._id.toString())) return [3 /*break*/, 2];
-                                    return [3 /*break*/, 4];
-                                case 2: return [4 /*yield*/, student_schema_1.default.findOneAndUpdate({ email: email, name: name }, {
-                                        teacherId: nearestTeacher._id,
-                                        distanceFromNearestTeacher: nearestTeacher.distanceToStudent,
-                                    }, { new: true })];
-                                case 3:
-                                    _b.sent();
-                                    _b.label = 4;
-                                case 4: return [2 /*return*/];
-                            }
-                        });
-                    });
-                });
-                return [2 /*return*/, constants_1.successMsgs.created];
-        }
-    });
-}); };
-exports.near = near;
+// export const nearestTeacherToStudent = async () => {
+//   const student = await Student.find({});
+//   const nearestTeacher = student.map(
+//     async ({ location }: StudentSchemaType) => {
+//       const unitValue = 1000;
+//       const [temp] = await Teacher.aggregate([
+//         {
+//           $geoNear: {
+//             near: {
+//               type: "Point",
+//               coordinates: location.coordinates,
+//             },
+//             distanceField: "distanceToTeacher",
+//             distanceMultiplier: 1 / unitValue,
+//           },
+//         },
+//         {
+//           $sort: {
+//             distance: 1,
+//           },
+//         },
+//         { $limit: 1 },
+//       ]);
+//       return temp.distanceToTeacher;
+//     }
+//   );
+//   return await nearestTeacher;
+// };
 var totalStudentCount = function () { return __awaiter(void 0, void 0, void 0, function () {
     var studentCount;
     return __generator(this, function (_a) {
@@ -117,4 +91,42 @@ var totalStudentCount = function () { return __awaiter(void 0, void 0, void 0, f
     });
 }); };
 exports.totalStudentCount = totalStudentCount;
+var nearStudents = function (id) { return __awaiter(void 0, void 0, void 0, function () {
+    var teacherDetails, location, name, unitValue, distanceToStudent;
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0: return [4 /*yield*/, teacher_schema_1.default.findById(id)];
+            case 1:
+                teacherDetails = _a.sent();
+                if (!teacherDetails) {
+                    throw Error(constants_1.errorMsg.noTeacher);
+                }
+                location = teacherDetails.location, name = teacherDetails.name;
+                unitValue = 1000;
+                return [4 /*yield*/, student_schema_1.default.aggregate([
+                        {
+                            $geoNear: {
+                                near: {
+                                    type: "Point",
+                                    coordinates: location.coordinates,
+                                },
+                                query: { teacherId: id },
+                                distanceField: "distanceToStudent",
+                                distanceMultiplier: 1 / unitValue,
+                            },
+                        },
+                        {
+                            $sort: {
+                                distance: 1,
+                            },
+                        },
+                        { $project: { name: 1, email: 1, distanceToStudent: 1 } },
+                    ])];
+            case 2:
+                distanceToStudent = _a.sent();
+                return [2 /*return*/, { distanceToStudent: distanceToStudent, name: name }];
+        }
+    });
+}); };
+exports.nearStudents = nearStudents;
 //# sourceMappingURL=teacher-service.js.map
